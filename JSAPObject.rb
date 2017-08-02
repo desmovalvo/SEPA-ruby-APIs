@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+# -*- coding: utf-8 -*-
 
 # global reqs
 require 'json'
@@ -82,6 +83,95 @@ class JSAPObject
       @logger.error("Impossible to read URIs")
     end
     
+  end
+
+
+  # read update
+  def getUpdate(updateName, forcedBindings)
+    
+    # debug
+    @logger.debug("JSAPObject::getUpdate invoked")
+    
+    # read from the JSAP
+    begin
+      
+      # fetching the dict
+      updateDict = @jsap["updates"][updateName]     
+        
+      # perform the substitution
+      updateText = self.getFinalSparql(updateDict, forcedBindings)
+
+      # final value
+      @logger.debug("Final version of #{updateName}:")
+      @logger.debug(updateText)
+
+    rescue JSON::JSONError
+      @logger.error("Update not found")
+    end
+
+    # return
+    return updateText
+  end
+
+
+  # read query
+  def getQuery(queryName, forcedBindings)
+    
+    # debug
+    @logger.debug("JSAPObject::getQuery invoked")
+    
+    # read from the JSAP
+    begin
+      
+      # fetching the dict
+      queryDict = @jsap["queries"][queryName]     
+        
+      # perform the substitution
+      queryText = self.getFinalSparql(queryDict, forcedBindings)
+
+      # final value
+      @logger.debug("Final version of #{queryName}:")
+      @logger.debug(queryText)
+
+    rescue JSON::JSONError
+      @logger.error("Query not found")
+    end
+
+    # return
+    return queryText
+  end
+
+
+  # read SPARQL
+  def getFinalSparql(sparqlDict, forcedBindings)
+
+    # retrieving the sparql
+    sparqlText = sparqlDict["sparql"]
+    @logger.debug("Retrieved the following template:")
+    @logger.debug(sparqlText)
+
+    # replacing forced bindings
+    if sparqlDict.key?("forcedBindings")
+      sparqlDict["forcedBindings"].each do |varName,varType|
+        if forcedBindings.key?(varName)
+          
+          # build three regular expressions
+          rsList = []
+          rsList << '(\?|\$){1}' + varName + '\s+'
+          rsList << '(\?|\$){1}' + varName + '\}'
+          rsList << '(\?|\$){1}' + varName + '\.'
+          
+          # cycle over regexps and do the substitution
+          rsList.each do |rs|
+            r = Regexp.new rs  
+            sparqlText = sparqlText.gsub(r, " #{forcedBindings[varName]} ")
+          end         
+        end
+      end
+    end
+    
+    # return
+    return sparqlText
   end
 
 end
