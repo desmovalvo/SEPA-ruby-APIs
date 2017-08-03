@@ -8,16 +8,11 @@ require 'logger'
 # the main class
 class JSAPObject
 
-  # instance variables
-  @updateURI = nil
-  @queryURI = nil
-  @subscribeURI = nil
-  @secureUpdateURI = nil
-  @secureQueryURI = nil
-  @secureSubscribeURI = nil
-  @registrationURI = nil
-  @tokenRequestURI = nil
-  @jsap = nil
+  # getters
+  attr_reader :updateURI, :queryURI, :subscribeURI
+  attr_reader :secureUpdateURI, :secureQueryURI, :secureSubscribeURI
+  attr_reader :registrationURI, :tokenRequestURI, :jsap
+  attr_reader :namespaces
 
   # constructor
   def initialize(jsapFile)
@@ -34,6 +29,9 @@ class JSAPObject
     rescue JSON::JSONError
       @logger.fatal("Impossible to parse JSAP file")
     end
+
+    # read namespaces
+    self.readNamespaces()
 
     # read network addresses
     self.readNetworkURIs()
@@ -195,7 +193,29 @@ class JSAPObject
     end
     
     # return
-    return sparqlText
+    return self.getNamespaces + sparqlText
+  end
+
+  
+  # get Namespaces
+  def getNamespaces()
+    
+    # debug
+    @logger.debug("JSAPObject::getNamespaces invoked")
+    
+    # build namespaces section
+    prefixSection = ""
+    @namespaces.each do |pre,ns|
+      prefixSection += "PREFIX #{pre}: <#{ns}> "
+    end
+    
+    # debug
+    @logger.debug("Build the following namespace section:")
+    @logger.debug(prefixSection)
+    
+    # return
+    return prefixSection
+
   end
 
 end
