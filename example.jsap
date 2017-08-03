@@ -1,0 +1,86 @@
+{
+    "parameters":
+    {
+	"host":"localtost",
+	"ports":
+	{
+	    "http":8000,
+	    "https":8443,
+	    "ws":9000,
+	    "wss":9443
+	},
+	"paths":
+	{
+	    "query":"/query",
+	    "update":"/update",
+	    "subscribe":"/subscribe",
+	    "register":"/oauth/register",
+	    "tokenRequest":"/oauth/token",
+	    "securePath":"/secure"
+	}
+    },
+    "namespaces":
+    {
+	"owl":"http://www.w3.org/2002/07/owl#",
+	"rdf":"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+	"rdfs":"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+	"foaf":"http://xmlns.com/foaf/0.1/"
+    },
+    "updates":
+    {
+	"INSERT_OBJECT_OF_CLASS" :
+	{
+	    "sparql" : "INSERT DATA { ?ob rdf:type ?class }",
+	    "forcedBindings":
+	    {
+		"class":
+		{
+		    "type":"uri",
+		    "value":""
+		},
+		"ob":
+		{
+		    "type":"uri",
+		    "value":""
+		}
+	    }
+	},
+	"DELETE_OBJECT_OF_CLASS" :
+	{
+	    "sparql" : "DELETE DATA { ?ob rdf:type ?class }",
+	    "forcedBindings":
+	    {
+		"class":
+		{
+		    "type":"uri",
+		    "value":""
+		},
+		"ob":
+		{
+		    "type":"uri",
+		    "value":""
+		}
+	    }
+	},
+	"DELETE_EVERYTHING":{
+	    "sparql":"DELETE { ?s ?p ?o } WHERE { ?s ?p ?o }"
+	}
+    },
+    "queries":
+    {
+	"EVERYTHING":
+	{
+	    "sparql":"SELECT ?s ?p ?o WHERE { ?s ?p ?o }"
+	},
+	"OBJECTS_OF_CLASS":
+	{
+	    "sparql":"SELECT ?s WHERE { ?s rdf:type ?class }",
+	    "forcedBinding":{
+		"class":{
+		    "type":"uri",
+		    "value":""
+		}
+	    }
+	}
+    }
+}

@@ -72,18 +72,18 @@ class JSAPObject
       host = @jsap["parameters"]["host"]
       
       # read URIs for unsecure operations
-      @updateURI = "http://#{host}:#{@jsap["parameters"]["ports"]["http"]}/#{@jsap["parameters"]["paths"]["update"]}"
-      @queryURI = "http://#{host}:#{@jsap["parameters"]["ports"]["http"]}/#{@jsap["parameters"]["paths"]["query"]}"
-      @subscribeURI = "ws://#{host}:#{@jsap["parameters"]["ports"]["ws"]}/#{@jsap["parameters"]["paths"]["subscribe"]}"
+      @updateURI = "http://#{host}:#{@jsap["parameters"]["ports"]["http"]}#{@jsap["parameters"]["paths"]["update"]}"
+      @queryURI = "http://#{host}:#{@jsap["parameters"]["ports"]["http"]}#{@jsap["parameters"]["paths"]["query"]}"
+      @subscribeURI = "ws://#{host}:#{@jsap["parameters"]["ports"]["ws"]}#{@jsap["parameters"]["paths"]["subscribe"]}"
       
       # read URIs for secure operations
-      @secureUpdateURI = "https://#{host}:#{@jsap["parameters"]["ports"]["https"]}/#{@jsap["parameters"]["paths"]["securePath"]}/#{@jsap["parameters"]["paths"]["update"]}"
-      @secureQueryURI = "https://#{host}:#{@jsap["parameters"]["ports"]["https"]}/#{@jsap["parameters"]["paths"]["securePath"]}/#{@jsap["parameters"]["paths"]["query"]}"
-      @secureSubscribeURI = "wss://#{host}:#{@jsap["parameters"]["ports"]["wss"]}/#{@jsap["parameters"]["paths"]["securePath"]}/#{@jsap["parameters"]["paths"]["subscribe"]}"
+      @secureUpdateURI = "https://#{host}:#{@jsap["parameters"]["ports"]["https"]}#{@jsap["parameters"]["paths"]["securePath"]}#{@jsap["parameters"]["paths"]["update"]}"
+      @secureQueryURI = "https://#{host}:#{@jsap["parameters"]["ports"]["https"]}#{@jsap["parameters"]["paths"]["securePath"]}#{@jsap["parameters"]["paths"]["query"]}"
+      @secureSubscribeURI = "wss://#{host}:#{@jsap["parameters"]["ports"]["wss"]}#{@jsap["parameters"]["paths"]["securePath"]}#{@jsap["parameters"]["paths"]["subscribe"]}"
       
       # read URIs for registration and token requests
-      @registrationURI = "https://#{host}:#{@jsap["parameters"]["ports"]["https"]}/#{@jsap["parameters"]["paths"]["register"]}"
-      @tokenRequestURI = "https://#{host}:#{@jsap["parameters"]["ports"]["https"]}/#{@jsap["parameters"]["paths"]["tokenRequest"]}"
+      @registrationURI = "https://#{host}:#{@jsap["parameters"]["ports"]["https"]}#{@jsap["parameters"]["paths"]["register"]}"
+      @tokenRequestURI = "https://#{host}:#{@jsap["parameters"]["ports"]["https"]}#{@jsap["parameters"]["paths"]["tokenRequest"]}"
 
       # debug
       @logger.debug("Found the following URIs for unsecure connection:")
@@ -116,6 +116,10 @@ class JSAPObject
       
       # fetching the dict
       updateDict = @jsap["updates"][updateName]     
+      if updateDict.nil?
+        @logger.error("Update not found")
+        raise NameError, "Update not found"
+      end
         
       # perform the substitution
       updateText = self.getFinalSparql(updateDict, forcedBindings)
@@ -144,6 +148,10 @@ class JSAPObject
       
       # fetching the dict
       queryDict = @jsap["queries"][queryName]     
+      if queryDict.nil?
+        @logger.error("Query not found")
+        raise NameError, "Query not found"
+      end
         
       # perform the substitution
       queryText = self.getFinalSparql(queryDict, forcedBindings)
