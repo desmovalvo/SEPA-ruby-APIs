@@ -40,6 +40,27 @@ class JSAPObject
 
   end
 
+ 
+  # read namespaces
+  def readNamespaces()
+
+    # debug
+    @logger.debug("JSAPObject::readNamespaces invoked")
+
+    # read from the dict
+    @namespaces = Hash.new
+    begin
+      @jsap["namespaces"].each do |pre,ns|
+        @logger.debug("Bound prefix #{pre} to namespace #{ns}")
+        @namespaces[pre] = ns
+      end
+    rescue JSON::JSONError
+      @logger.error("Impossible to read namespaces")
+    end
+
+  end
+
+
   # readNetworkURIs
   def readNetworkURIs()
 
@@ -144,6 +165,9 @@ class JSAPObject
 
   # read SPARQL
   def getFinalSparql(sparqlDict, forcedBindings)
+
+    # debug
+    @logger.debug("JSAPObject::getFinalSparql invoked")
 
     # retrieving the sparql
     sparqlText = sparqlDict["sparql"]
