@@ -50,7 +50,7 @@ kp = LowLevelKP.new(j.updateURI, j.queryURI, j.subscribeURI,
 
 # perform a query
 @logger.debug("===== 2 - query =====")
-kp.query(j.getQuery("EVERYTHING", Hash.new))
+kp.query(j.getQuery("EVERYTHING", {}))
 
 # perform an update
 @logger.debug("===== 3.1 - update =====")
@@ -59,3 +59,13 @@ kp.update(j.getUpdate("INSERT_OBJECT_OF_CLASS", {"class" => "foaf:Person", "ob" 
 # perform a query
 @logger.debug("===== 3.2 - update =====")
 kp.update(j.getUpdate("DELETE_OBJECT_OF_CLASS", {"class" => "foaf:Person", "ob" => "foaf:FabioViola_URI" }))
+
+# subscribe
+@logger.debug("===== 3.3 - subscribe =====")
+kp.subscribe(j.getQuery("EVERYTHING", {}), "foo", NilClass)
+puts "sleeping..."
+sleep(10)
+
+# unsubscribe
+@logger.debug("===== 3.4 - unsubscribe =====")
+kp.unsubscribe("foo")
