@@ -1,7 +1,7 @@
 {
     "parameters":
     {
-	"host":"localtost",
+	"host":"localhost",
 	"ports":
 	{
 	    "http":8000,
